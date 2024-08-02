@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title style="color: black;">BMI Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-6 text-center">BMI Calculator</h2>
+        <form id="bmiForm" class="space-y-4">
+            <div>
+                <label for="weight" class="block text-sm font-medium text-gray-700">Weight (kg)</label>
+                <input type="number" id="weight" name="weight" required
+                    class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div>
+                <label for="height" class="block text-sm font-medium text-gray-700">Height (m)</label>
+                <input type="number" step="0.01" id="height" name="height" required
+                    class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div class="text-center">
+                <button type="submit"
+                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Calculate BMI</button>
+            </div>
+        </form>
+        <div id="result" class="mt-6 text-center"></div>
+    </div>
+
+    <script>
+        document.getElementById('bmiForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const weight = document.getElementById('weight').value;
+            const height = document.getElementById('height').value;
+
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/bmi?weight=${weight}&height=${height}`);
+                const data = await response.json();
+                document.getElementById('result').innerHTML = `
+                    <p class="text-xl font-semibold">Your BMI: ${data.bmi}</p>
+                    <p class="text-lg">${data.message}</p>
+                `;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `
+                    <p class="text-red-500">Error: Unable to fetch BMI data.</p>
+                `;
+            }
+        });
+    </script>
+
+</body>
+</html>
